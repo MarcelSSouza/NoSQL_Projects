@@ -1160,84 +1160,52 @@ Type "it" for more
 { "_id" : ObjectId("633e99cf4c77e7cc233adf6b"), "nome" : "Bagel Cafe" }
 
 
-
 6-db.restaurants.find({"grades.score": $gt: 85})
 
+7-db.restaurants.find( { grades: { $elemMatch: { score: { $gte:80, $lte:100 } } } } )
 
+8-db.restaurants.find( { "address.coord.0": { $lt:-95.7 } } )
 
-#7
-db.rest.find( { grades: { $elemMatch: { score: { $gte:85, $lte:100 } } } } )
+9-db.restaurants.find( { "address.coord.0": { $lt:-65 }, "grades.score": { $gt:70 }, "gastronomia": { $ne:"American" } } )
 
-#8
-db.rest.find( { "address.coord.0": { $lt:-95.7 } } )
+10-db.restaurants.find( { "nome": { $regex: "Wil*" } }, { restaurant_id:1, nome:1, localidade:1, gastronomia:1 } )
 
-#9
-db.rest.find( { "address.coord.0": { $lt:-65 }, "grades.score": { $gt:70 }, "gastronomia": { $ne:"American" } } )
+11-db.restaurants.find( { localidade:"Bronx", gastronomia: { $in: [ "American", "Chinese" ] } }, { nome:1, localidade:1, gastronomia:1 } )
 
-#10
-db.rest.find( { "nome": { $regex: "Wil*" } }, { restaurant_id:1, nome:1, localidade:1, gastronomia:1 } )
+12-db.restaurants.find( { "localidade": { $in: [ "Staten Island", "Queens", "Brooklyn" ] } }, { restaurant_id:1, nome:1, localidade:1, gastronomia:1 } )
 
-#11
-db.rest.find( { localidade:"Bronx", gastronomia: { $in: [ "American", "Chinese" ] } }, { nome:1, localidade:1, gastronomia:1 } )
+13-db.restaurants.find( { "grades.score": { $not: { $gt:3 } } }, { restaurant_id:1, nome:1, localidade:1, "grades.score":1, gastronomia:1 } )
 
-#12
-db.rest.find( { "localidade": { $in: [ "Staten Island", "Queens", "Brooklyn" ] } }, { restaurant_id:1, nome:1, localidade:1, gastronomia:1 } )
+14-db.restaurants.find( { grades: { $elemMatch: { grade: "A", score: 10, date: ISODate("2014-08-11T00:00:00Z") } } }, { nome:1, "grades":1 } )
 
-#13
-db.rest.find( { "grades.score": { $not: { $gt:3 } } }, { restaurant_id:1, nome:1, localidade:1, "grades.score":1, gastronomia:1 } )
+15-db.restaurants.find( { "grades.1.grade": "A", "grades.1.date": ISODate("2014-08-11T00:00:00Z") }, { restaurant_id:1, nome:1, "grades.score":1 } )
 
-#14
-db.rest.find( { grades: { $elemMatch: { grade: "A", score: 10, date: ISODate("2014-08-11T00:00:00Z") } } }, { nome:1, "grades":1 } )
+16-db.restaurants.find( { "address.coord.1": { $gt: 42, $lte: 52 } }, { restaurant_id:1, nome:1, address:1 } )
 
-#15
-db.rest.find( { "grades.1.grade": "A", "grades.1.date": ISODate("2014-08-11T00:00:00Z") }, { restaurant_id:1, nome:1, "grades.score":1 } )
+17-db.restaurants.find( {}, { nome:1, gastronomia:1, localidade:1 } ).sort( { gastronomia: 1, localidade: -1 } )
 
-#16
-db.rest.find( { "address.coord.1": { $gt: 42, $lte: 52 } }, { restaurant_id:1, nome:1, address:1 } )
+18-db.restaurants.find( { localidade: "Brooklyn", gastronomia: { $ne: "American" }, grades: { $elemMatch: { grade: "A" } } }, { nome:1, localidade:1, "grades.grade":1, gastronomia:1 } ).sort( { gastronomia: -1 } )
 
-#17
-db.rest.find( {}, { nome:1, gastronomia:1, localidade:1 } ).sort( { gastronomia: 1, localidade: -1 } )
+19-db.restaurants.aggregate( { $match: {} }, { $group: { _id:"$localidade", total: { $sum:1 } } } ) 
 
-#18
-db.rest.find( { localidade: "Brooklyn", gastronomia: { $ne: "American" }, grades: { $elemMatch: { grade: "A" } } }, { nome:1, localidade:1, "grades.grade":1, gastronomia:1 } ).sort( { gastronomia: -1 } )
+20-db.restaurants.aggregate([ { $unwind: "$grades" }, { $group: { _id:"$restaurant_id", avgScore: { $avg: "$grades.score" } } }, { $match: { avgScore: { $gt: 30 } } } ])
 
-#19
-db.rest.aggregate( { $match: {} }, { $group: { _id:"$localidade", total: { $sum:1 } } } ) 
-// { "_id" : "Staten Island", "total" : 158 }
-// { "_id" : "Manhattan", "total" : 1883 }
-// { "_id" : "Brooklyn", "total" : 684 }
-// { "_id" : "Queens", "total" : 738 }
-// { "_id" : "Bronx", "total" : 309 }
+21-db.restaurants.aggregate([ { $unwind: "$grades" }, { $group: { _id:"$restaurant_id", scoreSum: { $sum: "$grades.score" }, gastronomia: { $first: "$gastronomia" }, coords: { $first: "$address.coord" } } }, { $match: { scoreSum: { $gt: 75 }, gastronomia: "American", "coords.0": { $lt: -60 } } } ])
 
-#20
-db.rest.aggregate([ { $unwind: "$grades" }, { $group: { _id:"$restaurant_id", avgScore: { $avg: "$grades.score" } } }, { $match: { avgScore: { $gt: 30 } } } ])
+22-db.restaurants.aggregate( { $match: {} }, { $group: { _id: "$gastronomia", numeroRestaurantes: { $sum: 1 } } }, { $sort: { numeroRestaurantes: -1 } } )
 
-#21
-db.rest.aggregate([ { $unwind: "$grades" }, { $group: { _id:"$restaurant_id", scoreSum: { $sum: "$grades.score" }, gastronomia: { $first: "$gastronomia" }, coords: { $first: "$address.coord" } } }, { $match: { scoreSum: { $gt: 75 }, gastronomia: "American", "coords.0": { $lt: -60 } } } ])
+23-db.restaurants.aggregate([ { $match: { "address.rua": "Flatbush Avenue" } }, { $group: { _id:"$address.rua", gastronomias: { $addToSet: "$gastronomia" } } }, { $unwind: "$gastronomias" } , { $group: { _id: "$_id", numeroGastronomias: { $sum: 1 } } } ])
 
-#22
-db.rest.aggregate( { $match: {} }, { $group: { _id: "$gastronomia", numeroRestaurantes: { $sum: 1 } } }, { $sort: { numeroRestaurantes: -1 } } )
+24-db.restaurants.aggregate([ { $group: { _id: "$address.rua", numeroRestaurantes: { $sum: 1 } } }, { $sort: { numeroRestaurantes: -1 } } ])
 
-#23
-db.rest.aggregate([ { $match: { "address.rua": "Flatbush Avenue" } }, { $group: { _id:"$address.rua", gastronomias: { $addToSet: "$gastronomia" } } }, { $unwind: "$gastronomias" } , { $group: { _id: "$_id", numeroGastronomias: { $sum: 1 } } } ])
+25-db.restaurants.aggregate([ { $group: { _id:"$localidade", gastronomias: { $addToSet: "$gastronomia" } } }, { $sort: { _id:1 } } ])
 
-#24
-db.rest.aggregate([ { $group: { _id: "$address.rua", numeroRestaurantes: { $sum: 1 } } }, { $sort: { numeroRestaurantes: -1 } } ])
+26-db.restaurants.find( { grades: { $not: { $elemMatch: { date: { $gte: ISODate("2014-09-01T00:00:00Z") } } } } } )
 
-#25 Para cada localidade, a lista de tipos de gastronomia disponível, ordenado por ordem alfabética
-db.rest.aggregate([ { $group: { _id:"$localidade", gastronomias: { $addToSet: "$gastronomia" } } }, { $sort: { _id:1 } } ])
+27-db.restaurants.aggregate([ { $unwind: "$grades" }, { $sort: { "restaurant_id": 1, "grades.date":1 } }, { $group: { _id:"$restaurant_id", lastScore: { $last: "$grades.score" }, localidade: { $first: "$localidade" } } }, { $group: { _id: "$localidade", mediaScore: { $avg: "$lastScore" } } } ])
 
-#26 Lista de restaurantes não avaliados deste 2014-09-01 (todos os grades são anteriores a esta data)
-db.rest.find( { grades: { $not: { $elemMatch: { date: { $gte: ISODate("2014-09-01T00:00:00Z") } } } } } )
+28-db.restaurants.aggregate([ { $unwind: "$grades" }, { $match: { "grades.grade": { $ne: "Not Yet Graded" } } }, { $group: { _id: { "localidade": "$localidade", "grade": "$grades.grade" }, numero: { $sum: 1 } } }, { $sort: { "_id.localidade": 1 } } ])
 
-#27 Média das pontuações dos restaurantes em cada localidade (com base na última avaliação dada)
-db.rest.aggregate([ { $unwind: "$grades" }, { $sort: { "restaurant_id": 1, "grades.date":1 } }, { $group: { _id:"$restaurant_id", lastScore: { $last: "$grades.score" }, localidade: { $first: "$localidade" } } }, { $group: { _id: "$localidade", mediaScore: { $avg: "$lastScore" } } } ])
+29-db.restaurants.aggregate([ { $unwind: "$grades" }, { $match: { "grades.grade": { $ne: "Not Yet Graded" } } }, { $group: { _id: { "restaurante": "$nome", "grade": "$grades.grade" }, numero: { $sum: 1 } } }, { $sort: { "_id.restaurante": 1 } } ])
 
-#28 Número de grades dado por grade por localidade, ignorando classificações não atribuídas ("Not Yet Graded") (Ou seja, para cada localidade dar o número de A, B, C, .. atribuídos), ordenado pelo nome da localidade
-db.rest.aggregate([ { $unwind: "$grades" }, { $match: { "grades.grade": { $ne: "Not Yet Graded" } } }, { $group: { _id: { "localidade": "$localidade", "grade": "$grades.grade" }, numero: { $sum: 1 } } }, { $sort: { "_id.localidade": 1 } } ])
-
-#29 Número de grades dado por grade por restaurante, ignorando classificações não atribuídas ("Not Yet Graded"), ordenado pelo nome do restaurante
-db.rest.aggregate([ { $unwind: "$grades" }, { $match: { "grades.grade": { $ne: "Not Yet Graded" } } }, { $group: { _id: { "restaurante": "$nome", "grade": "$grades.grade" }, numero: { $sum: 1 } } }, { $sort: { "_id.restaurante": 1 } } ])
-
-#30 Número de restaurantes no mesmo código postal, por ordem decrescente do número de restaurantes, com recurso ao comando aggregate.
-db.rest.aggregate( { $group: { _id: "$address.zipcode", numeroRestaurantes: { $sum:1 } } }, { $sort: { numeroRestaurantes: -1 } } )
+30-db.restaurants.aggregate( { $group: { _id: "$address.zipcode", numeroRestaurantes: { $sum:1 } } }, { $sort: { numeroRestaurantes: -1 } } )

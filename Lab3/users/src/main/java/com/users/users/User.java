@@ -1,4 +1,5 @@
 package com.users.users;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,28 +10,31 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Table(name = "persons")
 public class User {
-    
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    
+
     @NotBlank(message = "Name is mandatory")
     private String name;
-    
+
     @NotBlank(message = "Email is mandatory")
     private String email;
 
-    //Getters and setters
+    @NotBlank(message = "Phone is mandatory")
+    private String phone;
+
+    // Getters and setters
 
     public User() {
     }
 
-    public User(long id, String name, String email) {
+    public User(long id, String name, String email, String phone) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.phone = phone;
     }
+
 
     public long getId() {
         return this.id;
@@ -56,32 +60,15 @@ public class User {
         this.email = email;
     }
 
-    public User id(long id) {
-        setId(id);
-        return this;
+    public String getPhone() {
+        return this.phone;
     }
 
-    public User name(String name) {
-        setName(name);
-        return this;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
-
-    public User email(String email) {
-        setEmail(email);
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-            " id='" + getId() + "'" +
-            ", name='" + getName() + "'" +
-            ", email='" + getEmail() + "'" +
-            "}";
-    }
+  
 
 
 
 }
-
-
