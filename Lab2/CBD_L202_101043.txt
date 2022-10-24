@@ -1,4 +1,6 @@
+# CBD – Lab201 – Marcel Santos Souza
 QUESTOES
+AO FIM DO QUINTO QUERY, OMITI OS OUTPUTS PARA POUPAR ESPAÇO NO TXT
 
 1- db.restaurants.find()
 
@@ -1159,7 +1161,6 @@ Type "it" for more
 { "_id" : ObjectId("633e99d04c77e7cc233ae87f"), "nome" : "Astral Fitness & Wellness" }
 { "_id" : ObjectId("633e99cf4c77e7cc233adf6b"), "nome" : "Bagel Cafe" }
 
-
 6-db.restaurants.find({"grades.score": $gt: 85})
 
 7-db.restaurants.find( { grades: { $elemMatch: { score: { $gte:80, $lte:100 } } } } )
@@ -1172,34 +1173,23 @@ Type "it" for more
 
 11-db.restaurants.find({"localidade": "Bronx","gastronomia": { $in : ["American","Chinese"]} },{nome:1 , "localidade":1 , "gastronomia":1 ,_id : 0})
 
-
 12-db.restaurants.find({"localidade": { $in: ["Bronx","Staten Island","Queens"]} },{"restaurant_id":1,"nome":1 , "localidade":1 , "gastronomia":1 ,_id : 0})
 
 13-db.restaurants.find({ "grades": { $elemMatch: { "score": { $lte: 3 }} } },{"nome":1 , "localidade":1 , "gastronomia":1,"grades.score":1,_id:0} )
 
-
 14-db.restaurants.find({ "grades": { $elemMatch: { "grade": "A","score":10 ,"date": ISODate("2014-08-11T00:00:00Z")} } },{"nome":1,"grades":1,_id:0} )
-
 
 15-db.restaurants.find({"grades.1.grade": "A", "grades.1.date": ISODate("2014-08-11T00:00:00Z")},{"restaurant_id":1,"nome":1,"grades" : {$slice : [1,1]},_id:0}).pretty()
 
-
 16-db.restaurants.find({"address.coord.1": {$gt: 48, $lte:52} },{"nome":1,"restaurant_id":1,"address":1,_id:0}).pretty()
-
 
 17-db.restaurants.find({},{"nome":1,"gastronomia":1,"localidade":1,_id:0}).sort({"gastronomia":1,"localidade":-1})
 
-
-
 18- db.restaurants.find({"grades.grade": "A","gastronomia": {$ne: "American"}},{"nome":1,"localidade":1,"grades.grade":1,"gastronomia":1,_id:0}).sort({"gastronomia":-1})
-
-
 
 19-db.restaurants.aggregate([{"$group" : {_id:"$localidade", count:{$sum:1}}}])
 
-
 20- db.restaurants.aggregate([{ $unwind: "$grades" },{$group : {_id:{nome:"$nome", restaurant_id:"$restaurant_id"}, averageScore:{$avg:"$grades.score"}}},{ $match: {averageScore: {$gt: 30}}}])
-
 
 21-db.restaurants.aggregate([{ $unwind: "$grades" },{$group : {_id:{nome:"$nome", gastronomia:"$gastronomia" ,restaurant_id:"$restaurant_id"},coords: { $first: "$address.coord" }  ,sumScore:{$sum:"$grades.score"}}},{ $match: {sumScore: {$gt: 50}, "_id.gastronomia": "Portuguese","coords.0": {$lt: -60}}}])
 
@@ -1208,7 +1198,6 @@ Type "it" for more
 23-db.restaurants.aggregate([{ $match: { "address.rua": "Fifth Avenue" }} ,{$group: {_id:"$gastronomia",rua: { $first: "$address.rua" } ,numGastronomias:{$count: {}}}},{$group: {_id:"$rua",numeroGastronomias:{$sum: 1}}}])
 
 24-db.restaurants.aggregate([{$group: {_id:"$gastronomia",rua: { $first: "$address.rua" } ,numGastronomias:{$count: {}}}},{$group: {_id:"$rua",numeroGastronomias:{$sum: 1}}},{$sort: {numeroGastronomias :-1}}])
-
 
 25-db.restaurants.aggregate([ { $group: { _id:"$localidade", gastronomias: { $addToSet: "$gastronomia" } } }, { $sort: { _id:1 } } ])
 

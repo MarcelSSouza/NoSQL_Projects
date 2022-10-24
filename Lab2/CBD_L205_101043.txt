@@ -1,6 +1,6 @@
 DATASET SOBRE DEPUTADOS FEDERAIS DO BRASIL
+
 FRENTES- FRENTES PARLAMENTARES
-GASTOS - GASTOS PUBLICOS DE ALGUNS DEPUTADOS
 DEPUTADOS- LISTA DE DEPUTADOS ATUANTES NA CAMARA
 
 
@@ -25,4 +25,20 @@ db.frentes.find({ "titulo": {$regex: /.*Saúde*./}}).pretty().sort( { "idLegisla
 
 
 QUERIES USANDO AGGREGATE 
+1-ORGANIZAR OS PARTIDOS COM BASE NO NUMERO DE DEPUTADO NA CAMARA
+db.deputados.aggregate([{"$group" : {_id:"$siglaPartido", count:{$sum:1}}}])
 
+2-RETORNA TODOS OS DEPUTADOS DO PT NO BRASIL DE FORMA AGREGADA
+db.deputados.aggregate([{$match: {"siglaPartido": "PT"}, {"$group" : {total: {$sum: "$_id"}}}])
+
+3-RETORNA TODAS AS FRENTES PARLAMENTARES REALIZADAS NOS ANOS ENTRE 2017 e 2022
+db.frentes.aggregate([{"$group" : {_id:"$idLegislatura", count:{$sum:1}}}])
+
+4-AGREGA OS DEPUTADOS E MOSTRA EM ORDEM DECRESCENTE OS QUE TIVERAM MAIS ATUAÇOES COMO COORDENADORES DE FRENTES PARLAMENTARES
+db.frentes.aggregate([{"$group" : {_id:"$coordenador.nome", count:{$sum:1}}}, { $sort : { count : -1 } }])
+
+5-MOSTRA DE FORMA AGREGADA E SIMPLES O TITULO, DATA DE INICIO E SITUACAO DAS FRENTES, ORDENADOS PELA DATA DE CRIACAO ATUAL PARA ANTIGA
+db.frentes.aggregate( [ { $project : { titulo : 1 , dataCriacao : 1, situacao:1} },{ $sort : { dataCriacao : -1 } } ] ).pretty()
+
+6-AGREGA OS DEPUTADOS E MOSTRA EM ORDEM CRESCENTE OS QUE TIVERAM COORDENACAO PARLAMENTAR ENTRE 3 E 10 VEZES
+db.frentes.aggregate([{"$group" : {_id:"$coordenador.nome", count:{$sum:1}}},{$match: {"count": { $gt: 3, $lt: 10 }}}, { $sort : { count : 1 } }])
