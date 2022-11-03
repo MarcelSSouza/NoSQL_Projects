@@ -1,0 +1,131 @@
+docker network create cassandra
+docker run --rm -d --name cassandra --hostname cassandra --network cassandra cassandra
+docker pull cassandra:latest
+docker run --rm --network cassandra -v "$(pwd)/data.cql:/scripts/data.cql" -e CQLSH_HOST=cassandra -e CQLSH_PORT=9042 -e CQLVERSION=3.4.5 nuvo/docker-cqlsh
+docker run --rm -it --network cassandra nuvo/docker-cqlsh cqlsh cassandra 9042 --cqlversion='3.4.5'
+
+-----------------------------------------CQLSH COMMANDS-----------------------------------
+
+cqlsh:times> CREATE KEYSPACE times WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3};
+
+Warnings :
+Your replication factor 3 for keyspace times is higher than the number of nodes 1
+
+
+cqlsh:times> CREATE TABLE times_brasileiros(time_id int PRIMARY KEY, time_nome text, time_local text, time_last_titulo text);
+
+
+cqlsh:times> CREATE INDEX id_time ON  times_brasileiros(time_id)
+
+cqlsh:times> INSERT INTO times_brasileiros (time_id,time_nome,time_local,time_last_titulo) VALUES (1,'Bahia','Salvador-BA','Copa do Nordeste 2020');
+
+cqlsh:times> INSERT INTO times_brasileiros (time_id,time_nome,time_local,time_last_titulo) VALUES (2,'Palmeiras','Sao Paulo-SP','Campeonato BR 2022');
+
+cqlsh:times> UPDATE times_brasileiros SET time_last_titulo='Campeonato BR 1988' WHERE time_id=1;
+
+cqlsh:times> SELECT * FROM times_brasileiros;
+
+ time_id | time_last_titulo   | time_local   | time_nome
+---------+--------------------+--------------+-----------
+       1 | Campeonato BR 1988 |  Salvador-BA |     Bahia
+       2 | Campeonato BR 2022 | Sao Paulo-SP | Palmeiras
+
+(2 rows)
+
+
+
+
+cqlsh:times> SELECT time_nome,time_last_titulo FROM times_brasileiros;
+
+ time_nome | time_last_titulo
+-----------+--------------------
+     Bahia | Campeonato BR 1988
+ Palmeiras | Campeonato BR 2022
+
+(2 rows)
+
+
+cqlsh:times> DELETE time_local FROM times_brasileiros WHERE time_id=2;
+
+cqlsh:times> SELECT * FROM times_brasileiros;
+
+ time_id | time_last_titulo   | time_local  | time_nome
+---------+--------------------+-------------+-----------
+       1 | Campeonato BR 1988 | Salvador-BA |     Bahia
+       2 | Campeonato BR 2022 |        null | Palmeiras
+
+(2 rows)
+
+
+
+
+cqlsh:times> DELETE FROM times_brasileiros WHERE time_id=2;
+cqlsh:times> SELECT * FROM times_brasileiros;
+
+ time_id | time_last_titulo   | time_local  | time_nome
+---------+--------------------+-------------+-----------
+       1 | Campeonato BR 1988 | Salvador-BA |     Bahia
+
+(1 rows)
+
+
+CREATE TABLE times_portugueses(time_id int PRIMARY KEY, time_nome text, time_local text, time_titulos map<timestamp, text>);
+
+cqlsh:times> CREATE TABLE times_portugueses(time_id int PRIMARY KEY, time_nome text, time_local text, time_titulos map<timestamp, text>);
+
+cqlsh:times> INSERT INTO times_portugueses (time_id,time_nome,time_local,tim
+e_titulos) VALUES (1,'FC Porto','Porto',{'2015-06-15 20:05-0700':'Liga 1'});
+
+cqlsh:times> SELECT * FROM times_portugueses;
+
+ time_id | time_local | time_nome | time_titulos
+---------+------------+-----------+-----------------------------------------------
+       1 |      Porto |  FC Porto | {'2015-06-16 03:05:00.000000+0000': 'Liga 1'}
+
+(1 rows)
+
+
+
+
+cqlsh:times> INSERT INTO times_portugueses (time_id,time_nome,time_local,time_titulos) VALUES (2,'FC PortoB','Porto',{'2015-06-15 20:05-0700':'Liga 2'})
+ USING TTL 20;
+
+cqlsh:times> SELECT * FROM times_portugueses;
+
+ time_id | time_local | time_nome | time_titulos
+---------+------------+-----------+-----------------------------------------------
+       1 |      Porto |  FC Porto | {'2015-06-16 03:05:00.000000+0000': 'Liga 1'}
+       2 |      Porto | FC PortoB | {'2015-06-16 03:05:00.000000+0000': 'Liga 2'}
+
+(2 rows)
+
+
+DEPOIS DE 20 SEGUNDOS----------------
+
+
+cqlsh:times> SELECT * FROM times_portugueses;
+
+ time_id | time_local | time_nome | time_titulos
+---------+------------+-----------+-----------------------------------------------
+       1 |      Porto |  FC Porto | {'2015-06-16 03:05:00.000000+0000': 'Liga 1'}
+
+
+---------CREATING MY TYPE--------
+cqlsh:times> CREATE TYPE times.escalacao( ano int, tecnico text, time map<te
+xt, int>);
+
+cqlsh:times> describe type escalacao
+
+CREATE TYPE times.escalacao (
+    ano int,
+    tecnico text,
+    time map<text, int>
+);
+
+
+
+ALTER TABLE times_portugueses ADD escalacao escalacao;
+
+
+ INSERT INTO times_portugueses (escalacao) VALUES({ano:2022, tecnico: 'Sergio Conceicao',time: {'Otavio':25,'Pepe':3,'Alex Teles':13}}) WHER
+E time_id = 1;
