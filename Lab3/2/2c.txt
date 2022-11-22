@@ -1,0 +1,57 @@
+#A.
+
+cqlsh:partilhavideos> SELECT * FROM Video WHERE author = 'pedro@f.ag' ALLOW FILTERING;
+
+ id                                   | author     | upload_timestamp                | description             | name                                        | tags
+--------------------------------------+------------+---------------------------------+-------------------------+---------------------------------------------+------------------------------
+ 08be5390-69ed-11ed-8b90-8b11f0cc8707 | pedro@f.ag | 2022-11-21 22:37:09.321000+0000 | Why am I doing this?... | Watching every JonTron Video in one sitting | ['JonTron', 'Random', 'Why']
+
+(1 rows)
+
+
+
+
+#B. 
+
+cqlsh:partilhavideos> SELECT * FROM Comment_per_author WHERE author = 'ds@test.com' ORDER BY upload_timestamp DESC;
+
+
+ author      | upload_timestamp                | comment         | id                                   | video_id
+-------------+---------------------------------+-----------------+--------------------------------------+--------------------------------------
+ ds@test.com | 2022-11-21 22:37:09.721000+0000 | WHATS HAPPENING | 08fb5c91-69ed-11ed-8b90-8b11f0cc8707 | 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d
+ ds@test.com | 2022-11-21 22:37:09.664000+0000 |       Wait wtf? | 08f2aa01-69ed-11ed-8b90-8b11f0cc8707 | 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d
+ ds@test.com | 2022-11-21 22:37:09.585000+0000 |  Also Second :) | 08e69c11-69ed-11ed-8b90-8b11f0cc8707 | 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d
+ ds@test.com | 2022-11-21 22:37:09.567000+0000 |           FIRST | 08e3dcf1-69ed-11ed-8b90-8b11f0cc8707 | 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d
+
+(4 rows)
+
+
+
+#C. 
+
+cqlsh:partilhavideos> SELECT * FROM Comment_per_video WHERE video_id = 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d ORDER BY upload_timestamp DESC ;
+
+ video_id                             | upload_timestamp                | author        | comment         | id
+--------------------------------------+---------------------------------+---------------+-----------------+--------------------------------------
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.995000+0000 | user6@bot.com |        Hello DS | 09252bb1-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.974000+0000 |   ds@test.com | WHATS HAPPENING | 0921f761-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.951000+0000 | user5@bot.com |        Hello DS | 091e74f1-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.935000+0000 | user4@bot.com |        Hello DS | 091c03f1-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.914000+0000 |   ds@test.com |       Wait wtf? | 0918cfa1-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.898000+0000 | user2@bot.com |        Hello DS | 09165ea1-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.876000+0000 | user3@bot.com |        Hello DS | 09130341-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.857000+0000 | user1@bot.com |        Hello DS | 09104420-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.837000+0000 |   ds@test.com |  Also Second :) | 090d0fd1-69ed-11ed-8b90-8b11f0cc8707
+ 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d | 2022-11-21 22:37:09.815000+0000 |   ds@test.com |           FIRST | 0909b471-69ed-11ed-8b90-8b11f0cc8707
+
+(10 rows)
+
+
+#D.
+cqlsh:partilhavideos> SELECT avg(value) as Average, count(value) as NoReviews FROM Rating WHERE video_id = 19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d;
+
+ average | noreviews
+---------+-----------
+       5 |         9
+
+(1 rows)

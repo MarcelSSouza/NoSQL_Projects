@@ -1,0 +1,106 @@
+[
+    {
+        "user": "user7@bot.com ",
+        "video_id": "19e006d0-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.236Z",
+        "video_timestamp": 0,
+        "action": "Play",
+        "id": "0949f1c1-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "clau@sof.pt",
+        "video_id": "1baab4b0-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.273Z",
+        "video_timestamp": 69,
+        "action": "Stop",
+        "id": "094f9711-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "clau@sof.pt",
+        "video_id": "1baab4b0-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.255Z",
+        "video_timestamp": 0,
+        "action": "Play",
+        "id": "094cd7f1-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "ds@test.com",
+        "video_id": "3ffcc5a0-0d4b-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.220Z",
+        "video_timestamp": 310,
+        "action": "Play",
+        "id": "094780c1-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "ds@test.com",
+        "video_id": "3ffcc5a0-0d4b-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.199Z",
+        "video_timestamp": 310,
+        "action": "Pause",
+        "id": "09444c71-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "ds@test.com",
+        "video_id": "3ffcc5a0-0d4b-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.184Z",
+        "video_timestamp": 0,
+        "action": "Play",
+        "id": "09420281-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "ds@test.com",
+        "video_id": "1f1a11e0-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.365Z",
+        "video_timestamp": 349,
+        "action": "Stop",
+        "id": "095da0d1-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "ds@test.com",
+        "video_id": "1f1a11e0-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.344Z",
+        "video_timestamp": 200,
+        "action": "Play",
+        "id": "095a6c81-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "ds@test.com",
+        "video_id": "1f1a11e0-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.329Z",
+        "video_timestamp": 200,
+        "action": "Pause",
+        "id": "09582291-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "ds@test.com",
+        "video_id": "1f1a11e0-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.309Z",
+        "video_timestamp": 150,
+        "action": "Play",
+        "id": "09551551-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "ds@test.com",
+        "video_id": "1f1a11e0-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.294Z",
+        "video_timestamp": 0,
+        "action": "Play",
+        "id": "0952cb61-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "pedro@f.ag",
+        "video_id": "20a1ea60-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.400Z",
+        "video_timestamp": 50,
+        "action": "Stop",
+        "id": "0962f801-69ed-11ed-8b90-8b11f0cc8707"
+    },
+    {
+        "user": "pedro@f.ag",
+        "video_id": "20a1ea60-0d6d-11ea-9d48-0b1cc2ad2f9d",
+        "real_timestamp": "2022-11-21 22:37:10.380Z",
+        "video_timestamp": 0,
+        "action": "Start",
+        "id": "095feac1-69ed-11ed-8b90-8b11f0cc8707"
+    }
+]
